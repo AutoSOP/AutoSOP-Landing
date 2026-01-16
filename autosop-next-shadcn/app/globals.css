@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 210 40% 98%;
+  --foreground: 222 44% 8%;
+  --border: 210 20% 90%;
+  --input: 210 20% 90%;
+  --ring: 210 40% 96%;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  @apply bg-background text-foreground;
+}
