@@ -3,11 +3,77 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Check, ArrowRight, Shield, Workflow, Users, LineChart, Sparkles, Building2, Settings2, Boxes, FolderCog, FileBox, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Check,
+  ArrowRight,
+  Shield,
+  Workflow,
+  Users,
+  LineChart,
+  Sparkles,
+  Building2,
+  Settings2,
+  Boxes,
+  FolderCog,
+  FileBox,
+  BadgeCheck,
+  ChevronDown
+} from "lucide-react";
+
+const FAQ_ITEMS = [
+  {
+    q: "What exactly does AutoSOP do?",
+    a: "AutoSOP converts your everyday work into clear, step-by-step SOPs automatically. You perform the task once—AutoSOP records the workflow and generates a polished procedure with screenshots, instructions, and version history.",
+  },
+  {
+    q: "How is AutoSOP different from Trainual, Whale, or SweetProcess?",
+    a: "Those tools require manual typing and formatting. AutoSOP does the heavy lifting by capturing your actual workflow and producing the SOP for you—saving hours per document and making it far easier to keep things updated.",
+  },
+  {
+    q: "Do I need technical experience to use AutoSOP?",
+    a: "No. If you can use your computer normally—clicking, searching, and navigating—AutoSOP can capture and produce a complete SOP from your actions. There’s no coding or complex configuration required.",
+  },
+  {
+    q: "Can my team members use AutoSOP too?",
+    a: "Yes. You can invite team members, assign SOP ownership, and track usage so you know which procedures are being used and where there are gaps or bottlenecks.",
+  },
+  {
+    q: "Is my information secure?",
+    a: "Yes. All data is encrypted in transit and at rest, and your recordings and SOPs are stored securely. AutoSOP does not sell or share your data with any third party.",
+  },
+  {
+    q: "What kinds of workflows can AutoSOP document?",
+    a: "AutoSOP can capture virtually any repeatable screen-based process, including HR and admin tasks, payroll and operations workflows, onboarding steps, franchise procedures, and daily software tasks. If it happens on your screen, AutoSOP can document it.",
+  },
+  {
+    q: "Can I export or share SOPs?",
+    a: "Yes. You can export SOPs as PDFs, share access links, or store them inside your company’s internal documentation library so people can find what they need without interrupting you.",
+  },
+  {
+    q: "How many SOPs can I create?",
+    a: "On paid plans, you can create unlimited SOPs with unlimited versions and unlimited viewers, so you’re never choosing which processes are “worth” documenting.",
+  },
+  {
+    q: "What if my process changes later?",
+    a: "Just run the workflow again. AutoSOP creates a new version of the SOP, lets you compare changes, and allows you to roll back if you ever need to revert.",
+  },
+  {
+    q: "Does AutoSOP help onboard new employees?",
+    a: "Yes. New hires get step-by-step SOPs with screenshots and clear instructions, so they can ramp up faster without relying on tribal knowledge or constant shadowing.",
+  },
+  {
+    q: "Do you offer support or onboarding help?",
+    a: "Yes. If you want hands-on help documenting your first workflows or setting up a rollout plan for your team or locations, our team can walk through it with you.",
+  },
+  {
+    q: "Is AutoSOP useful for franchisors or multi-location operators?",
+    a: "Absolutely. AutoSOP helps standardize tasks across locations, reduce onboarding time, and ensure consistent execution—no matter who is working the process or where they’re located.",
+  },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -17,6 +83,13 @@ const fadeUp = {
 const stagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.08 } },
+};
+
+const colors = {
+  primary: "#E31E24",      // AutoSOP red
+  secondary: "#E5E7EB",    // light border gray
+  textDark: "#0B1221",
+  textMuted: "#6B7280",
 };
 
 const Section = ({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) => (
@@ -41,6 +114,48 @@ const FeatureItem = ({ icon: Icon, title, children }: { icon: any; title: string
   </motion.div>
 );
 
+type FAQItem = { q: string; a: string };
+
+const AccordionItem = ({item, index}: { item: FAQItem; index: number }) => {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <motion.div
+      variants={fadeUp}
+      className="rounded-2xl border border-secondary bg-white"
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 md:px-5 md:py-4 text-left"
+      >
+        <span className="font-medium text-sm md:text-base">
+          {item.q}
+        </span>
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      <motion.div
+        initial={false}
+        animate={open ? "open" : "collapsed"}
+        variants={{
+          open: {height: "auto", opacity: 1},
+          collapsed: {height: 0, opacity: 0},
+        }}
+        transition={{duration: 0.2}}
+        className="overflow-hidden"
+      >
+        <div className="px-4 pb-3 md:px-5 md:pb-4 text-sm text-muted-foreground">
+          {item.a}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const ValueCard = ({ icon: Icon, title, points }: { icon: any; title: string; points: string[] }) => (
   <motion.div variants={fadeUp}>
     <Card className="h-full border-secondary">
@@ -63,33 +178,89 @@ const ValueCard = ({ icon: Icon, title, points }: { icon: any; title: string; po
 
 const LogoCloud = () => (
   <div className="grid grid-cols-2 md:grid-cols-6 gap-6 items-center opacity-80 text-muted-foreground">
-    {["ADP", "Paychex", "Paylocity", "HubSpot", "Airtable", "Softr"].map((name) => (
+    {["Law Offices", "Service", "Hospitality", "Medical", "Construction", "Retail"].map((name) => (
       <div key={name} className="flex items-center justify-center rounded-xl border py-4 text-xs md:text-sm border-secondary">{name}</div>
     ))}
   </div>
 );
 
-const PricingTier = ({ name, price, period = "mo", cta = "Start free", highlights = [], badge } :
-  { name: string; price: string; period?: string; cta?: string; highlights?: string[]; badge?: string; }) => (
-  <motion.div variants={fadeUp}>
-    <Card className={`h-full ${badge ? "border-2 border-primary" : "border-secondary"}`}>
+const PricingTier = ({ name, price, promoPrice, promoNote, period = "mo", cta = "Start free", highlights = [], badge, link = "#contact", } :
+  { name: string; price: string; promoPrice: string; promoNote: string; period?: string | null; cta?: string; highlights?: string[]; badge?: string; link?: string; }) => (
+    <motion.div variants={fadeUp}>
+    <Card
+      className={`h-full ${badge ? "border-2" : ""}`}
+      style={{ borderColor: badge ? colors.primary : colors.secondary }}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>{name}</CardTitle>
-          {badge && <Badge className="gap-1 bg-secondary text-secondary-foreground"><Sparkles className="h-3 w-3"/>{badge}</Badge>}
+          <CardTitle style={{ color: colors.textDark }}>{name}</CardTitle>
+
+          {badge && (
+            <Badge
+              variant="secondary"
+              className="gap-1"
+              style={{ backgroundColor: colors.secondary, color: colors.textDark }}
+            >
+              <Sparkles className="h-3 w-3" />
+              {badge}
+            </Badge>
+          )}
         </div>
-        <div className="mt-2">
-          <span className="text-3xl font-bold">{price}</span>
-          {period && <span className="text-muted-foreground">/{period}</span>}
+
+        {/* Price area */}
+        <div className="mt-2 space-y-1">
+          {promoPrice ? (
+            <>
+              {/* MSRP struck through */}
+              <div className="text-sm text-muted-foreground line-through">
+                {price}/{period}
+              </div>
+
+              {/* Promo price in red */}
+              <div className="text-3xl font-bold" style={{ color: colors.primary }}>
+                {promoPrice}
+                {period ? (
+                  <span className="text-base font-medium text-muted-foreground">
+                    /{period}
+                  </span>
+                ) : null}
+              </div>
+
+              {promoNote ? (
+                <div className="text-xs text-muted-foreground">{promoNote}</div>
+              ) : null}
+            </>
+          ) : (
+            <div className="mt-2">
+              <span className="text-3xl font-bold" style={{ color: colors.textDark }}>
+                {price}
+              </span>
+              {period ? <span className="text-muted-foreground">/{period}</span> : null}
+            </div>
+          )}
         </div>
       </CardHeader>
+
       <CardContent className="space-y-3">
-        <ul className="space-y-2 text-sm text-muted-foreground">
+        <ul className="space-y-2 text-sm" style={{ color: colors.textMuted }}>
           {highlights.map((h, i) => (
-            <li key={i} className="flex items-start gap-2"><Check className="h-4 w-4 mt-0.5 text-primary"/>{h}</li>
+            <li key={i} className="flex items-start gap-2">
+              <Check className="h-4 w-4 mt-0.5" style={{ color: colors.primary }} />
+              {h}
+            </li>
           ))}
         </ul>
-        <Button className="w-full group bg-primary text-primary-foreground hover:bg-[#c3181d]">{cta}<ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition"/></Button>
+
+        <Button
+            asChild
+            className="w-full group"
+            style={{ backgroundColor: colors.primary, color: "white" }}
+        >
+          <a href={link}>
+            {cta}
+            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition" />
+          </a>
+        </Button>
       </CardContent>
     </Card>
   </motion.div>
@@ -113,13 +284,15 @@ export default function Page() {
             <a href="#faq" className="hover:underline">FAQ</a>
           </nav>
           <div className="flex items-center gap-2">
-            <a
-                href="https://app.autosop.ai/users/sign_in"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              <Button variant="ghost" className="hidden md:inline-flex">Sign in</Button>
-            </a>
+            <Button asChild variant="ghost" className="hidden md:inline-flex">
+              <a
+                  href="https://app.autosop.ai/users/sign_in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+              >
+                Sign in
+              </a>
+            </Button>
             <Button className="group bg-primary text-primary-foreground hover:bg-[#c3181d]">Book a demo <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition"/></Button>
           </div>
         </Section>
@@ -153,12 +326,19 @@ export default function Page() {
                 <div className="aspect-video w-full rounded-2xl border grid place-items-center text-center p-6">
                   <div>
                     <div className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">Preview</div>
-                    <div className="text-lg md:text-xl font-semibold">Auto‑generated SOP: "Run First Payroll in ADP Run"</div>
-                    <p className="text-sm text-muted-foreground mt-2">Recorded clicks → Annotated steps → Shareable checklist</p>
+                    <div className="text-lg md:text-xl font-semibold">Auto‑generated SOP: "Create an SOP for client to onboard their employees with a requirement to register for the ADP app"</div>
+                    <p className="text-sm text-muted-foreground mt-2 text-left">Steps <br />
+                      1. Provide Employee Information to ADP: <br />
+                      - Gather the necessary employee information such as name, email address, job title, and department. <br />
+                      - Ensure all details are accurate and up-to-date before proceeding. <br />
+                      2. Access the ADP App Registration Portal: <br />
+                      - Log in to the ADP client account using the provided credentials. <br />
+                      - Navigate to the employee onboarding section within the ADP portal.
+                    </p>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-3 mt-3">
-                  {["Record", "Annotate", "Publish"].map((label) => (
+                  {["Request", "Annotate", "Publish"].map((label) => (
                     <div key={label} className="rounded-xl border p-3 text-center text-sm">{label}</div>
                   ))}
                 </div>
@@ -186,7 +366,7 @@ export default function Page() {
               title="For Franchisees & Ops"
               points={[
                 "Train new hires 2× faster with guided, clickable SOPs.",
-                "Embed SOPs right where work happens (HubSpot and ADP).",
+                "Embed SOPs right where work happens.",
                 "Reduce tickets and rework with inline validations and templates.",
               ]}
             />
@@ -203,13 +383,13 @@ export default function Page() {
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             <FeatureItem icon={Workflow} title="Capture">
-              Record a real workflow once. AutoSOP detects screens, clicks, and fields; drafts the steps; and grabs smart screenshots.
+              Capture workflows once so they can be standardized then your process can be documented clearly and consistently
             </FeatureItem>
             <FeatureItem icon={FolderCog} title="Design">
-              Turn steps into a brand‑safe SOP with roles, approvals, inputs, and links. Add snippets, checklists, and mini‑videos.
+              Refine steps into structured, governed and brand-safe SOPs to create more efficient team cultures
             </FeatureItem>
             <FeatureItem icon={FileBox} title="Publish">
-              Embed where your team works (Airtable, HubSpot, Softr) or run as a guided checklist with guardrails and sign‑offs.
+              Deploy SOPs where your team works--embedded in tool or run as guided checklists with guardrails and sign-offs
             </FeatureItem>
           </div>
         </motion.div>
@@ -219,19 +399,19 @@ export default function Page() {
       <Section id="features" className="py-12 md:py-20">
         <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} variants={stagger} className="grid lg:grid-cols-3 gap-6">
           <ValueCard icon={Settings2} title="SOP Builder" points={[
-            "Drag‑and‑drop steps, roles, SLAs, and approvals",
-            "Auto‑screenshots and blur sensitive fields",
-            "Reusable templates for payroll and onboarding",
+            "Structured steps with roles, approvals, and accountability",
+            "Reusable SOP templates for onboarding, payroll and operations",
+            "Designed for consistency across teams and locations",
           ]} />
-          <ValueCard icon={Boxes} title="Integrations" points={[
-            "ADP, Paychex, Paylocity, HubSpot, Airtable, Softr",
-            "Web embeds and Chrome capture",
-            "Webhook + Zapier friendly",
+          <ValueCard icon={Boxes} title="Distribution & Access" points={[
+            "Export SOPs to PDF, Word or Powerpoint",
+            "Embed SOPs where teams work or run them as guided checklists",
+            "Centralized access with version control",
           ]} />
-          <ValueCard icon={LineChart} title="Analytics" points={[
-            "Completion rates, time‑to‑complete, failure points",
-            "Version control and audit trail",
-            "Export to CSV for franchise HQ dashboards",
+          <ValueCard icon={LineChart} title="Governance & Oversight" points={[
+            "Track versions and maintain audit-ready SOP histories",
+            "Standardize execution across teams and locations",
+            "Built to support multi-location and white-label operations",
           ]} />
         </motion.div>
       </Section>
@@ -245,10 +425,10 @@ export default function Page() {
               <p className="text-muted-foreground mt-3">Designed for payroll and sensitive PII workflows.</p>
               <div className="mt-6 space-y-3">
                 {[
-                  "Role‑based access, SSO, and least‑privilege defaults",
-                  "Field‑level redaction on screenshots and recordings",
-                  "Versioned SOPs with review gates and audit logs",
-                  "Data residency and encryption at rest/in transit",
+                  "Role‑based access controls and least-privilege defaults",
+                  "Configurable redaction for sensitive fields in screenshots and recordings",
+                  "Versioned SOPs with review workflows and audit history",
+                  "Encryption in transit and at rest with region-aware data handling",
                 ].map((t, i) => (
                   <div key={i} className="flex items-start gap-3"><Shield className="h-5 w-5 mt-0.5"/><p className="text-sm text-muted-foreground">{t}</p></div>
                 ))}
@@ -258,8 +438,8 @@ export default function Page() {
               <div className="aspect-video rounded-2xl border grid place-items-center text-center p-6">
                 <div>
                   <div className="text-sm uppercase tracking-widest text-muted-foreground mb-2">Compliance snapshot</div>
-                  <div className="font-semibold">SOC‑2 alignment • PII redaction • Audit trail</div>
-                  <p className="text-sm text-muted-foreground mt-2">Work with your compliance partner—AutoSOP plays nice.</p>
+                  <div className="font-semibold">SOC‑2 aligned controls • PII redaction design • Audit-ready workflows</div>
+                  <p className="text-sm text-muted-foreground mt-2">AutoSOP supports your compliance posture and works alongside your existing advisors</p>
                 </div>
               </div>
             </motion.div>
@@ -276,36 +456,36 @@ export default function Page() {
           </div>
           <div className="grid md:grid-cols-3 gap-6 items-start">
             <PricingTier
-              name="Starter"
-              price="$0"
-              cta="Start free"
-              highlights={[
-                "Up to 3 active SOPs",
-                "Screenshot capture",
-                "Web embeds",
-              ]}
-            />
+                name="Starter"
+                price="$0"
+                cta="Start Free"
+                highlights={[
+                  "Up to 3 active SOPs",
+                  "Screenshot capture",
+                  "1 User no teams",
+                ]} promoPrice={""} promoNote={""}            />
             <PricingTier
-              name="Pro"
-              price="$29"
-              badge="Most popular"
-              highlights={[
-                "Unlimited SOPs",
-                "Roles & approvals",
-                "Integrations + Analytics",
-              ]}
-            />
+                name="Founders"
+                price="$49"
+                promoPrice="$29"
+                promoNote="Founding rate - first 6 months"
+                badge="Founding Rate"
+                cta="Get Started"
+                highlights={[
+                  "Unlimited SOPs & Versions",
+                  "Team Access & Permissions",
+                  "PDF and DOCX Exports",
+                ]}            />
             <PricingTier
-              name="Franchise"
-              price="Custom"
-              period={""}
-              cta="Talk to sales"
-              highlights={[
-                "Multi‑brand rollouts",
-                "Territory analytics",
-                "SSO, audit, data residency",
-              ]}
-            />
+                name="White Label"
+                price="Custom"
+                period={""}
+                cta="Talk to Sales"
+                highlights={[
+                  "Your Branding on the platform",
+                  "Client or location-level rollouts",
+                  "Centralized SOP governance",
+                ]} promoPrice={""} promoNote={""}            />
           </div>
         </motion.div>
       </Section>
@@ -330,18 +510,34 @@ export default function Page() {
 
       {/* FAQ */}
       <Section id="faq" className="py-12 md:py-20">
-        <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} variants={stagger} className="grid md:grid-cols-2 gap-6">
-          {[
-            { q: "Can AutoSOP capture any web app?", a: "Yes. The Chrome capture works across most modern web apps. Desktop capture is on the roadmap." },
-            { q: "How do SOP updates roll out?", a: "Publish a new version and set required re‑read/acknowledge. Older versions remain archived with full audit trail." },
-            { q: "Where does data live?", a: "Encrypted at rest and in transit. We offer regional data residency options for franchise networks." },
-            { q: "Do you offer help with migration?", a: "Yes—white‑glove migration packages are available for franchisors." },
-          ].map((f, i) => (
-            <Card key={i}>
-              <CardHeader><CardTitle className="text-base">{f.q}</CardTitle></CardHeader>
-              <CardContent className="text-sm text-muted-foreground">{f.a}</CardContent>
-            </Card>
-          ))}
+        <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{once: true, margin: "-80px"}}
+            variants={stagger}
+            className="space-y-8"
+        >
+          <div className="text-center max-w-2xl mx-auto">
+            <h3 className="text-2xl md:text-4xl font-bold tracking-tight">
+              Frequently asked questions
+            </h3>
+            <p className="text-muted-foreground mt-3">
+              The short answers to the things operators and franchisors ask us most often.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 items-start">
+            <div className="space-y-4">
+              {FAQ_ITEMS.filter((_, i) => i % 2 === 0).map((item, i) => (
+                  <AccordionItem key={item.q} item={item} index={i}/>
+              ))}
+            </div>
+            <div className="space-y-4">
+              {FAQ_ITEMS.filter((_, i) => i % 2 === 1).map((item, i) => (
+                  <AccordionItem key={item.q} item={item} index={i}/>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </Section>
 
