@@ -92,7 +92,7 @@ const LogoCloud = () => (
 );
 
 const PricingTier = ({ name, price, promoPrice, promoNote, period = "mo", cta = "Start free", highlights = [], badge, link = "#contact", } :
-  { name: string; price: string; promoPrice: string; promoNote: string; period?: string | null; cta?: string; highlights?: string[]; badge?: string; link?: string; }) => (
+  { name: string; price: string; promoPrice?: string; promoNote?: string; period?: string | null; cta?: string; highlights?: string[]; badge?: string; link?: string; }) => (
     <motion.div variants={fadeUp}>
     <Card
       className={`h-full ${badge ? "border-2" : ""}`}
