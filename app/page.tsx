@@ -318,7 +318,20 @@ export default function Page() {
                 AutoSOP captures how work really gets done across all departments in your business and turns it into living, step by step playbooks—complete with PDF, Word and Powerpoint exports.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button size="lg" className="group bg-primary text-primary-foreground hover:bg-[#c3181d]">Start free <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition"/></Button>
+              <Button
+  asChild
+  size="lg"
+  className="group bg-primary text-primary-foreground hover:bg-[#c3181d]"
+>
+  <a
+    href="https://app.autosop.ai/users/sign_up"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Start free
+    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition" />
+  </a>
+</Button>
                 <Button size="lg" variant="outline">Watch 2 min overview</Button>
               </div>
               <div className="pt-4">
@@ -464,9 +477,10 @@ export default function Page() {
               name="Starter"
               price="$0"
               cta="Start Free"
+              link="https://app.autosop.ai/users/sign_up"
               highlights={[
                 "Up to 3 active SOPs",
-                "Screenshot capture",
+                "PDF Export",
                 "1 User no teams",
               ]}
             />
