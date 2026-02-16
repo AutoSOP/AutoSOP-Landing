@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import HubspotFormModal from "@/components/ui/HubspotFormModal";
 import {
   Check,
   ArrowRight,
@@ -91,9 +92,33 @@ const LogoCloud = () => (
   </div>
 );
 
-const PricingTier = ({ name, price, promoPrice, promoNote, period = "mo", cta = "Start free", highlights = [], badge, link = "#contact", } :
-  { name: string; price: string; promoPrice?: string; promoNote?: string; period?: string | null; cta?: string; highlights?: string[]; badge?: string; link?: string; }) => (
-    <motion.div variants={fadeUp}>
+type PricingTierProps = {
+  name: string;
+  price: string;
+  promoPrice?: string;
+  promoNote?: string;
+  period?: string | null;
+  cta?: string;
+  highlights?: string[];
+  badge?: string;
+
+  link?: string;
+  onCtaClick?: () => void;
+};
+
+const PricingTier = ({
+  name,
+  price,
+  promoPrice,
+  promoNote,
+  period = "mo",
+  cta = "Start free",
+  highlights = [],
+  badge,
+  link,
+  onCtaClick,
+}: PricingTierProps) => (
+  <motion.div variants={fadeUp}>
     <Card
       className={`h-full ${badge ? "border-2" : ""}`}
       style={{ borderColor: badge ? colors.primary : colors.secondary }}
@@ -114,28 +139,21 @@ const PricingTier = ({ name, price, promoPrice, promoNote, period = "mo", cta = 
           )}
         </div>
 
-        {/* Price area */}
         <div className="mt-2 space-y-1">
           {promoPrice ? (
             <>
-              {/* MSRP struck through */}
               <div className="text-sm text-muted-foreground line-through">
-                {price}/{period}
+                {price}{period ? `/${period}` : ""}
               </div>
 
-              {/* Promo price in red */}
               <div className="text-3xl font-bold" style={{ color: colors.primary }}>
                 {promoPrice}
                 {period ? (
-                  <span className="text-base font-medium text-muted-foreground">
-                    /{period}
-                  </span>
+                  <span className="text-base font-medium text-muted-foreground">/{period}</span>
                 ) : null}
               </div>
 
-              {promoNote ? (
-                <div className="text-xs text-muted-foreground">{promoNote}</div>
-              ) : null}
+              {promoNote ? <div className="text-xs text-muted-foreground">{promoNote}</div> : null}
             </>
           ) : (
             <div className="mt-2">
@@ -158,20 +176,30 @@ const PricingTier = ({ name, price, promoPrice, promoNote, period = "mo", cta = 
           ))}
         </ul>
 
-        <Button
-          asChild
-          className="w-full group"
-          style={{ backgroundColor: colors.primary, color: "white" }}
-        >
-          <a href={link}>
+        {onCtaClick ? (
+          <Button
+            onClick={onCtaClick}
+            className="w-full group bg-primary text-primary-foreground hover:bg-[#c3181d]"
+          >
             {cta}
             <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition" />
-          </a>
-        </Button>
+          </Button>
+        ) : (
+          <Button
+            asChild
+            className="w-full group bg-primary text-primary-foreground hover:bg-[#c3181d]"
+          >
+            <a href={link ?? "#"}>
+              {cta}
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition" />
+            </a>
+          </Button>
+        )}
       </CardContent>
     </Card>
   </motion.div>
 );
+
 // FAQ data
 const FAQ_ITEMS = [
   {
@@ -267,6 +295,12 @@ const AccordionItem = ({ item, index }: { item: FAQItem; index: number }) => {
 };
 
 export default function Page() {
+const [demoOpen, setDemoOpen] = React.useState(false);
+const [salesOpen, setSalesOpen] = React.useState(false);
+
+const HUBSPOT_PORTAL_ID = "50269348";
+const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
+  
   return (
     <div className="min-h-screen w-full bg-background text-foreground">
       {/* Nav */}
@@ -278,7 +312,7 @@ export default function Page() {
     src="/assets/autoSOP-logo.png" 
     alt="AutoSOP ai" 
     className="h-7 w-auto cursor-pointer"
-  />
+      />
 </a>
             <Badge variant="outline" className="ml-3 hidden md:inline-flex">White Label Opportunities</Badge>
           </div>
@@ -298,7 +332,14 @@ export default function Page() {
     Sign in
   </Button>
 </a>
-            <Button className="group bg-primary text-primary-foreground hover:bg-[#c3181d]">Book a demo <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition"/></Button>
+<Button
+  onClick={() => setDemoOpen(true)}
+  className="group bg-primary text-primary-foreground hover:bg-[#c3181d]"
+>
+  Book a demo
+</Button>
+
+
           </div>
         </Section>
       </header>
@@ -491,6 +532,7 @@ export default function Page() {
               promoNote="Founding rate - first 6 months"
               badge="Founding Rate"
               cta="Get Started"
+              link="https://app.autosop.ai/users/sign_up"
               highlights={[
                 "Unlimited SOPs & Versions",
                 "Team Access & Permissions",
@@ -500,14 +542,15 @@ export default function Page() {
             <PricingTier
               name="White Label"
               price="Custom"
-              period={""}
+              period=""
               cta="Talk to Sales"
+              onCtaClick={() => setSalesOpen(true)}
               highlights={[
                 "Your Branding on the platform",
                 "Client or location-level rollouts",
                 "Centralized SOP governance",
-              ]}
-            />
+  ]}
+/>
           </div>
         </motion.div>
       </Section>
@@ -521,10 +564,22 @@ export default function Page() {
                 <div className="text-2xl md:text-3xl font-bold tracking-tight">Ready to turn chaos into clean execution?</div>
                 <p className="text-muted-foreground mt-2">Ship your first SOP in under an hour—no consultants required.</p>
               </div>
-              <form className="flex flex-col sm:flex-row gap-3">
-                <Input type="email" placeholder="Work email" className="h-11" />
-                <Button className="h-11 group bg-primary text-primary-foreground hover:bg-[#c3181d]">Get started <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition"/></Button>
-              </form>
+              <form
+  className="flex flex-col sm:flex-row gap-3"
+  onSubmit={(e) => {
+    e.preventDefault();
+    const email = new FormData(e.currentTarget).get("email")?.toString().trim();
+
+    const qs = email ? `?email=${encodeURIComponent(email)}` : "";
+    window.open(`https://app.autosop.ai/users/sign_up${qs}`, "_blank");
+  }}
+>
+  <Input name="email" type="email" placeholder="Work email" className="h-11" required />
+  <Button type="submit" className="h-11 group bg-primary text-primary-foreground hover:bg-[#c3181d]">
+    Get started
+    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 transition" />
+  </Button>
+</form>
             </CardContent>
           </Card>
         </motion.div>
@@ -562,6 +617,30 @@ export default function Page() {
     </div>
   </motion.div>
 </Section>
+<HubspotFormModal
+  open={demoOpen}
+  onOpenChange={setDemoOpen}
+  title="Book a demo"
+  portalId={HUBSPOT_PORTAL_ID}
+  formId={HUBSPOT_FORM_ID}
+  region="na1"
+  ctaSource="book_demo"
+/>
+
+<HubspotFormModal
+  open={salesOpen}
+  onOpenChange={setSalesOpen}
+  title="Talk to Sales"
+  portalId={HUBSPOT_PORTAL_ID}
+  formId={HUBSPOT_FORM_ID}
+  region="na1"
+  ctaSource="talk_to_sales"
+/>
+<div className="fixed bottom-4 right-4 z-[999999] rounded bg-black px-3 py-2 text-xs text-white">
+  demoOpen: {String(demoOpen)} | salesOpen: {String(salesOpen)}
+</div>
+
+
 
       {/* Footer */}
       <footer className="border-t py-10">
@@ -579,6 +658,7 @@ export default function Page() {
             <a href="#" className="hover:underline">Privacy</a>
             <a href="#" className="hover:underline">Terms</a>
           </div>
+          
         </Section>
       </footer>
     </div>
