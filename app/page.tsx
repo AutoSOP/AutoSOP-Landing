@@ -1,13 +1,14 @@
 
 "use client";
 
+import Link from "next/link";
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import HubspotFormModal from "@/components/ui/HubspotFormModal";
+import HubspotFormModal from "@/components/HubspotFormModal";
 import {
   Check,
   ArrowRight,
@@ -303,46 +304,7 @@ const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
   
   return (
     <div className="min-h-screen w-full bg-background text-foreground">
-      {/* Nav */}
-      <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur">
-        <Section className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-          <a href="https://www.autosop.ai/" className="flex items-center">
-  <img 
-    src="/assets/autoSOP-logo.png" 
-    alt="AutoSOP ai" 
-    className="h-7 w-auto cursor-pointer"
-      />
-</a>
-            <Badge variant="outline" className="ml-3 hidden md:inline-flex">White Label Opportunities</Badge>
-          </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm">
-            <a href="#how" className="hover:underline">How it works</a>
-            <a href="#features" className="hover:underline">Features</a>
-            <a href="#pricing" className="hover:underline">Pricing</a>
-            <a href="#security" className="hover:underline">Security</a>
-            <a href="#faq" className="hover:underline">FAQ</a>
-          </nav>
-          <div className="flex items-center gap-2">
-          <a 
-  href="https://app.autosop.ai/users/sign_in" 
-  className="hidden md:inline-flex"
->
-  <Button variant="ghost">
-    Sign in
-  </Button>
-</a>
-<Button
-  onClick={() => setDemoOpen(true)}
-  className="group bg-primary text-primary-foreground hover:bg-[#c3181d]"
->
-  Book a demo
-</Button>
-
-
-          </div>
-        </Section>
-      </header>
+      
 
       {/* Hero */}
       <Section className="py-16 md:py-24">
@@ -641,26 +603,7 @@ const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
 </div>
 
 
-
-      {/* Footer */}
-      <footer className="border-t py-10">
-        <Section className="flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src="/assets/autoSOP-logo.png" alt="AutoSOP.ai" className="h-8 w-auto"/>
-            <div>
-              <div className="font-semibold">AutoSOP.ai</div>
-              <div className="text-xs text-muted-foreground">© {new Date().getFullYear()} AutoSOP. All rights reserved.</div>
-            </div>
-          </div>
-          <div className="flex gap-6 text-sm">
-            <a href="#" className="hover:underline">Security</a>
-            <a href="#" className="hover:underline">Status</a>
-            <a href="#" className="hover:underline">Privacy</a>
-            <a href="#" className="hover:underline">Terms</a>
-          </div>
-          
-        </Section>
-      </footer>
+      
     </div>
   );
 }
