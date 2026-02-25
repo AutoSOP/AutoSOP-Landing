@@ -1,38 +1,80 @@
-import Link from "next/link";
+import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
+type PromptCardCopy = {
+  label?: string;   // e.g. "Too generic" / "High signal"
+  title: string;    // card title
+  helper?: string;  // short helper sentence under title
+  prompt: string;   // the prompt text
+};
 
 export type PromptFrameworkSectionProps = {
   eyebrow?: string;
   headline?: string;
   subhead?: string;
 
-  // CTA under the “ask this first” block
+  templateTitle?: string;
+
   primaryCtaHref?: string;
   primaryCtaLabel?: string;
 
-  // Optional: if you want a secondary CTA
   secondaryCtaHref?: string;
   secondaryCtaLabel?: string;
 
-  // Used in CTA copy (optional)
-  templateTitle?: string;
+  genericPrompt?: PromptCardCopy;
+  betterPrompt?: PromptCardCopy;
+
+  askFirstTitle?: string;
+  askFirstSubhead?: string;
+  askFirstPrompt?: string;
 };
 
-const DEFAULTS: Required<
-  Pick<
-    PromptFrameworkSectionProps,
-    "eyebrow" | "headline" | "subhead" | "primaryCtaHref" | "primaryCtaLabel" | "templateTitle"
-  >
-> = {
-  eyebrow: "Prompt Framework",
-  headline: "Prompt Framework: get better SOP output",
-  subhead:
-    "Use this framework to write prompts that produce SOPs that actually match your business. It’s not about “good” vs “bad” prompts — it’s about including the variables that matter.",
-  primaryCtaHref: "https://app.autosop.ai/users/sign_up",
-  primaryCtaLabel: "Start free",
-  templateTitle: "SOP",
+const DEFAULT_GENERIC: PromptCardCopy = {
+  label: "Too generic",
+  title: "“Bad” prompt example",
+  helper: "This isn’t “wrong” — it’s just missing context, so the SOP will be generic too.",
+  prompt: "Create an SOP for employee onboarding.",
 };
+
+const DEFAULT_BETTER: PromptCardCopy = {
+  label: "High signal",
+  title: "Better prompt (structured)",
+  helper: "Same request — but now the output will be specific, usable, and consistent.",
+  prompt: `You are an operations expert. Create a step-by-step Employee Onboarding SOP.
+
+Role: HR Admin (primary), Store Manager (approver)
+Goal: New hire is fully onboarded and ready for Day 1
+Scope: Starts when offer is accepted; ends when employee completes Day-1 setup
+Systems: ADP Workforce Now, Google Workspace, Slack
+Inputs: Offer letter, legal name, address, SSN, W-4, I-9 docs, direct deposit info
+Rules: I-9 must be completed by Day 3; manager approves job title & pay rate; PII must not be shared in Slack
+Outputs: ADP profile created, payroll setup complete, email/slack accounts created, onboarding checklist completed
+Exceptions: Remote hires; re-hires within 12 months; missing I-9 docs
+
+Format:
+1) Purpose
+2) Roles & responsibilities
+3) Preconditions
+4) Steps with numbered actions and checkpoints
+5) Quality checks + common failure points
+6) Time expectations (SLA)
+7) Version notes`,
+};
+
+const DEFAULT_ASK_FIRST = `Before writing the SOP, ask me 10 clarifying questions to capture:
+- Role(s)
+- Goal + definition of done
+- Scope start/end
+- Systems used
+- Inputs required
+- Policies/compliance constraints
+- Outputs produced
+- Exceptions/edge cases
+- Approval steps
+- SLAs / timing expectations
+
+After I answer, produce the full SOP in a clean, step-by-step format.`;
 
 const variables = [
   { label: "Role", desc: "Who is this SOP for? (HR Admin, Store Manager, Ops Lead, etc.)" },
@@ -45,21 +87,29 @@ const variables = [
   { label: "Exceptions", desc: "Edge cases (rehire, remote hire, contractor → employee, etc.)" },
 ];
 
-export default function PromptFrameworkSection(props: PromptFrameworkSectionProps) {
-  const {
-    eyebrow = DEFAULTS.eyebrow,
-    headline = DEFAULTS.headline,
-    subhead = DEFAULTS.subhead,
-    primaryCtaHref = DEFAULTS.primaryCtaHref,
-    primaryCtaLabel = DEFAULTS.primaryCtaLabel,
-    secondaryCtaHref,
-    secondaryCtaLabel = "Book a demo",
-    templateTitle = DEFAULTS.templateTitle,
-  } = props;
+export default function PromptFrameworkSection({
+  eyebrow = "Prompt Framework",
+  headline = "Prompt Framework: get better SOP output",
+  subhead = `Use this framework to write prompts that produce SOPs that actually match your business. It’s not about “good” vs “bad” prompts — it’s about including the variables that matter.`,
 
+  templateTitle = "SOP",
+
+  primaryCtaHref = "https://app.autosop.ai/users/sign_up",
+  primaryCtaLabel = "Start free",
+
+  secondaryCtaHref,
+  secondaryCtaLabel = "Book a demo",
+
+  genericPrompt = DEFAULT_GENERIC,
+  betterPrompt = DEFAULT_BETTER,
+
+  askFirstTitle = "If you don’t know the variables yet… ask this first",
+  askFirstSubhead = "Copy/paste this into AutoSOP first. It will ask the right questions before writing the SOP.",
+  askFirstPrompt = DEFAULT_ASK_FIRST,
+}: PromptFrameworkSectionProps) {
   return (
     <section className="py-12 md:py-16">
-      {/* Centered header */}
+      {/* Centered heading */}
       <div className="max-w-3xl mx-auto text-center space-y-3">
         <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs md:text-sm bg-white/60 backdrop-blur">
           {eyebrow}
@@ -68,7 +118,7 @@ export default function PromptFrameworkSection(props: PromptFrameworkSectionProp
         <p className="text-muted-foreground">{subhead}</p>
       </div>
 
-      {/* 8-variable card (centered + not full width) */}
+      {/* 8-variable card centered + 2 columns */}
       <div className="mt-8 flex justify-center">
         <Card className="w-full max-w-5xl border-secondary">
           <CardHeader>
@@ -102,21 +152,25 @@ export default function PromptFrameworkSection(props: PromptFrameworkSectionProp
         </div>
       </div>
 
-      {/* Comparison cards */}
+      {/* Comparison */}
       <div className="mt-8 grid gap-6 md:grid-cols-2 max-w-6xl mx-auto">
         <Card className="border-secondary">
           <CardHeader>
             <div className="flex items-center justify-between gap-3">
-              <CardTitle className="text-lg">“Bad” prompt example</CardTitle>
-              <div className="rounded-full border px-3 py-1 text-xs text-muted-foreground">Too generic</div>
+              <CardTitle className="text-lg">{genericPrompt.title}</CardTitle>
+              {genericPrompt.label ? (
+                <div className="rounded-full border px-3 py-1 text-xs text-muted-foreground">
+                  {genericPrompt.label}
+                </div>
+              ) : null}
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              This isn’t “wrong” — it’s just missing context, so the SOP will be generic too.
-            </p>
-            <div className="rounded-xl border border-secondary bg-white p-4 font-mono text-sm text-muted-foreground">
-              Create an SOP for employee onboarding.
+            {genericPrompt.helper ? (
+              <p className="text-sm text-muted-foreground">{genericPrompt.helper}</p>
+            ) : null}
+            <div className="rounded-xl border border-secondary bg-white p-4 font-mono text-sm text-muted-foreground whitespace-pre-wrap">
+              {genericPrompt.prompt}
             </div>
           </CardContent>
         </Card>
@@ -124,47 +178,29 @@ export default function PromptFrameworkSection(props: PromptFrameworkSectionProp
         <Card className="border-secondary">
           <CardHeader>
             <div className="flex items-center justify-between gap-3">
-              <CardTitle className="text-lg">Better prompt (structured)</CardTitle>
-              <div className="rounded-full border px-3 py-1 text-xs text-muted-foreground">High signal</div>
+              <CardTitle className="text-lg">{betterPrompt.title}</CardTitle>
+              {betterPrompt.label ? (
+                <div className="rounded-full border px-3 py-1 text-xs text-muted-foreground">
+                  {betterPrompt.label}
+                </div>
+              ) : null}
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              Same request — but now the output will be specific, usable, and consistent.
-            </p>
+            {betterPrompt.helper ? (
+              <p className="text-sm text-muted-foreground">{betterPrompt.helper}</p>
+            ) : null}
             <div className="rounded-xl border border-secondary bg-white p-4 font-mono text-sm text-muted-foreground whitespace-pre-wrap">
-{`You are an operations expert. Create a step-by-step Employee Onboarding SOP.
-
-Role: HR Admin (primary), Store Manager (approver)
-Goal: New hire is fully onboarded and ready for Day 1
-Scope: Starts when offer is accepted; ends when employee completes Day-1 setup
-Systems: ADP Workforce Now, Google Workspace, Slack
-Inputs: Offer letter, legal name, address, SSN, W-4, I-9 docs, direct deposit info
-Rules: I-9 must be completed by Day 3; manager approves job title & pay rate; PII must not be shared in Slack
-Outputs: ADP profile created, payroll setup complete, email/slack accounts created, onboarding checklist completed
-Exceptions: Remote hires; re-hires within 12 months; missing I-9 docs
-
-Format:
-1) Purpose
-2) Roles & responsibilities
-3) Preconditions
-4) Steps with numbered actions and checkpoints
-5) Quality checks + common failure points
-6) Time expectations (SLA)
-7) Version notes`}
+              {betterPrompt.prompt}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* “Ask this first” heading OUTSIDE the card + centered */}
+      {/* Ask-first heading OUTSIDE card + centered */}
       <div className="max-w-5xl mx-auto mt-12 text-center space-y-2">
-        <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
-          If you don’t know the variables yet… ask this first
-        </h3>
-        <p className="text-muted-foreground">
-          Copy/paste this into AutoSOP first. It will ask the right questions before writing the SOP.
-        </p>
+        <h3 className="text-2xl md:text-3xl font-bold tracking-tight">{askFirstTitle}</h3>
+        <p className="text-muted-foreground">{askFirstSubhead}</p>
       </div>
 
       {/* Ask-first card */}
@@ -172,25 +208,13 @@ Format:
         <Card className="w-full max-w-5xl border-secondary">
           <CardContent className="p-6">
             <div className="rounded-xl border border-secondary bg-white p-4 font-mono text-sm text-muted-foreground whitespace-pre-wrap">
-{`Before writing the SOP, ask me 10 clarifying questions to capture:
-- Role(s)
-- Goal + definition of done
-- Scope start/end
-- Systems used
-- Inputs required
-- Policies/compliance constraints
-- Outputs produced
-- Exceptions/edge cases
-- Approval steps
-- SLAs / timing expectations
-
-After I answer, produce the full SOP in a clean, step-by-step format.`}
+              {askFirstPrompt}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* CTA under the card */}
+      {/* CTA under ask-first card */}
       <div className="mt-6 flex flex-col items-center justify-center gap-3 text-center">
         <div className="text-sm text-muted-foreground">
           Ready? Create your <span className="font-medium text-foreground">{templateTitle}</span> SOP now.
