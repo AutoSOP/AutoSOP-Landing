@@ -1,135 +1,138 @@
-"use client";
-
-import * as React from "react";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
-type PromptFrameworkSectionProps = {
+export type PromptFrameworkSectionProps = {
+  eyebrow?: string;
+  headline?: string;
+  subhead?: string;
+
+  // CTA under the “ask this first” block
+  primaryCtaHref?: string;
+  primaryCtaLabel?: string;
+
+  // Optional: if you want a secondary CTA
+  secondaryCtaHref?: string;
+  secondaryCtaLabel?: string;
+
+  // Used in CTA copy (optional)
   templateTitle?: string;
 };
 
-export default function PromptFrameworkSection({
-  templateTitle = "Employee Onboarding SOP Prompt Template",
-}: PromptFrameworkSectionProps) {
-  const framework = [
-    { key: "Role", desc: "Who is this SOP for? (HR Admin, Store Manager, Ops Lead, etc.)" },
-    { key: "Goal", desc: "What outcome should the process produce?" },
-    { key: "Scope", desc: "Start/end points. What’s included vs excluded?" },
-    { key: "Systems", desc: "Tools used (ADP, Gusto, BambooHR, Google Workspace, etc.)" },
-    { key: "Inputs", desc: "What info is required to begin? (W-4, I-9, bank info, offer letter…)" },
-    { key: "Rules", desc: "Policies, compliance requirements, approvals, deadlines" },
-    { key: "Outputs", desc: "What’s produced? (accounts created, docs filed, checklists completed)" },
-    { key: "Exceptions", desc: "Edge cases (rehire, remote hire, contractor → employee, etc.)" },
-  ];
+const DEFAULTS: Required<
+  Pick<
+    PromptFrameworkSectionProps,
+    "eyebrow" | "headline" | "subhead" | "primaryCtaHref" | "primaryCtaLabel" | "templateTitle"
+  >
+> = {
+  eyebrow: "Prompt Framework",
+  headline: "Prompt Framework: get better SOP output",
+  subhead:
+    "Use this framework to write prompts that produce SOPs that actually match your business. It’s not about “good” vs “bad” prompts — it’s about including the variables that matter.",
+  primaryCtaHref: "https://app.autosop.ai/users/sign_up",
+  primaryCtaLabel: "Start free",
+  templateTitle: "SOP",
+};
+
+const variables = [
+  { label: "Role", desc: "Who is this SOP for? (HR Admin, Store Manager, Ops Lead, etc.)" },
+  { label: "Goal", desc: "What outcome should the process produce?" },
+  { label: "Scope", desc: "Start/end points. What’s included vs excluded?" },
+  { label: "Systems", desc: "Tools used (ADP, Gusto, BambooHR, Google Workspace, etc.)" },
+  { label: "Inputs", desc: "What info is required to begin? (W-4, I-9, bank info, offer letter…)" },
+  { label: "Rules", desc: "Policies, compliance requirements, approvals, deadlines" },
+  { label: "Outputs", desc: "What’s produced? (accounts created, docs filed, checklists completed)" },
+  { label: "Exceptions", desc: "Edge cases (rehire, remote hire, contractor → employee, etc.)" },
+];
+
+export default function PromptFrameworkSection(props: PromptFrameworkSectionProps) {
+  const {
+    eyebrow = DEFAULTS.eyebrow,
+    headline = DEFAULTS.headline,
+    subhead = DEFAULTS.subhead,
+    primaryCtaHref = DEFAULTS.primaryCtaHref,
+    primaryCtaLabel = DEFAULTS.primaryCtaLabel,
+    secondaryCtaHref,
+    secondaryCtaLabel = "Book a demo",
+    templateTitle = DEFAULTS.templateTitle,
+  } = props;
 
   return (
-    <section className="py-10 md:py-14">
-      <div className="space-y-6">
-      <div className="text-center space-y-4 max-w-3xl mx-auto">
-  <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-    Prompt Framework: get better SOP output
-  </h2>
-
-  <p className="text-muted-foreground text-base md:text-lg">
-    Use this framework to write prompts that produce SOPs that actually match your business.
-    It’s not about “good” vs “bad” prompts — it’s about including the variables that matter.
-  </p>
-</div>
-
-        <div className="flex justify-center">
-  <Card className="border-secondary w-full max-w-4xl rounded-2xl">
-    <CardHeader>
-      <CardTitle className="text-xl text-center">
-        The 8-variable SOP prompt
-      </CardTitle>
-    </CardHeader>
-
-    <CardContent>
-      <div className="grid md:grid-cols-2 gap-6">
-        {framework.map((f) => (
-          <div
-            key={f.key}
-            className="flex items-start gap-4 rounded-xl border p-4 bg-white/60 hover:bg-white transition"
-          >
-            <div className="min-w-[80px]">
-              <Badge
-                variant="outline"
-                className="w-full justify-center font-medium"
-              >
-                {f.key}
-              </Badge>
-            </div>
-
-            <div className="text-sm text-muted-foreground leading-relaxed">
-              {f.desc}
-            </div>
-          </div>
-        ))}
+    <section className="py-12 md:py-16">
+      {/* Centered header */}
+      <div className="max-w-3xl mx-auto text-center space-y-3">
+        <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs md:text-sm bg-white/60 backdrop-blur">
+          {eyebrow}
+        </div>
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{headline}</h2>
+        <p className="text-muted-foreground">{subhead}</p>
       </div>
-    </CardContent>
-  </Card>
-</div>
 
+      {/* 8-variable card (centered + not full width) */}
+      <div className="mt-8 flex justify-center">
+        <Card className="w-full max-w-5xl border-secondary">
+          <CardHeader>
+            <CardTitle className="text-center text-xl">The 8-variable SOP prompt</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-2">
+              {variables.map((v) => (
+                <div key={v.label} className="rounded-2xl border border-secondary bg-white p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="shrink-0 rounded-full border border-secondary px-3 py-1 text-xs font-medium">
+                      {v.label}
+                    </div>
+                    <div className="text-sm text-muted-foreground">{v.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-<section className="w-full py-14">
-  <div className="max-w-5xl mx-auto">
-
-    {/* Divider */}
-    <div className="flex justify-center mb-8">
-      <div className="h-px w-24 bg-border" />
-    </div>
-
-    {/* Section Heading */}
-    <div className="text-center space-y-3 mb-10">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-        Generic Prompt vs Effective Prompt
-      </h2>
-      <p className="text-muted-foreground max-w-2xl mx-auto">
-        Same request. Completely different output quality.
-      </p>
-    </div>
-
-    {/* Cards Grid */}
-    <div className="grid gap-6 lg:grid-cols-2">
-      {/* Bad */}
-      <div className="rounded-2xl border bg-white p-6 lg:p-7">
-        <div className="flex items-center justify-between gap-3">
-          <div className="text-sm font-semibold">“Bad” prompt example</div>
-          <span className="inline-flex items-center rounded-full border px-2.5 py-1 text-xs text-muted-foreground">
-            Too generic
-          </span>
-        </div>
-
-        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-          This isn’t “wrong” — it’s just missing context, so the SOP will be generic too.
-        </p>
-
-        <div className="mt-4 rounded-xl border bg-muted/30 p-4">
-          <pre className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
-{`Create an SOP for Employee Onboarding.`}
-          </pre>
-        </div>
-
-        <div className="mt-4 text-xs text-muted-foreground">
-          What’s missing: role, tools, scope, inputs, rules, outputs, exceptions.
+      {/* Divider + H2 */}
+      <div className="max-w-5xl mx-auto mt-12">
+        <div className="flex items-center justify-center gap-4">
+          <div className="h-px w-16 bg-border" />
+          <h3 className="text-center text-2xl md:text-3xl font-bold tracking-tight">
+            Generic Prompt vs Effective Prompt
+          </h3>
+          <div className="h-px w-16 bg-border" />
         </div>
       </div>
 
-      {/* Better */}
-      <div className="rounded-2xl border bg-white p-6 lg:p-7">
-        <div className="flex items-center justify-between gap-3">
-          <div className="text-sm font-semibold">Better prompt (structured)</div>
-          <span className="inline-flex items-center rounded-full border px-2.5 py-1 text-xs text-muted-foreground">
-            High signal
-          </span>
-        </div>
+      {/* Comparison cards */}
+      <div className="mt-8 grid gap-6 md:grid-cols-2 max-w-6xl mx-auto">
+        <Card className="border-secondary">
+          <CardHeader>
+            <div className="flex items-center justify-between gap-3">
+              <CardTitle className="text-lg">“Bad” prompt example</CardTitle>
+              <div className="rounded-full border px-3 py-1 text-xs text-muted-foreground">Too generic</div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              This isn’t “wrong” — it’s just missing context, so the SOP will be generic too.
+            </p>
+            <div className="rounded-xl border border-secondary bg-white p-4 font-mono text-sm text-muted-foreground">
+              Create an SOP for employee onboarding.
+            </div>
+          </CardContent>
+        </Card>
 
-        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-          Same request — but now the output will be specific, usable, and consistent.
-        </p>
-
-        <div className="mt-4 rounded-xl border bg-muted/30 p-4">
-          <pre className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+        <Card className="border-secondary">
+          <CardHeader>
+            <div className="flex items-center justify-between gap-3">
+              <CardTitle className="text-lg">Better prompt (structured)</CardTitle>
+              <div className="rounded-full border px-3 py-1 text-xs text-muted-foreground">High signal</div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Same request — but now the output will be specific, usable, and consistent.
+            </p>
+            <div className="rounded-xl border border-secondary bg-white p-4 font-mono text-sm text-muted-foreground whitespace-pre-wrap">
 {`You are an operations expert. Create a step-by-step Employee Onboarding SOP.
 
 Role: HR Admin (primary), Store Manager (approver)
@@ -149,31 +152,26 @@ Format:
 5) Quality checks + common failure points
 6) Time expectations (SLA)
 7) Version notes`}
-          </pre>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
-  </div>
-</section>
 
-<section className="w-full py-16">
-  <div className="max-w-4xl mx-auto px-4">
+      {/* “Ask this first” heading OUTSIDE the card + centered */}
+      <div className="max-w-5xl mx-auto mt-12 text-center space-y-2">
+        <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+          If you don’t know the variables yet… ask this first
+        </h3>
+        <p className="text-muted-foreground">
+          Copy/paste this into AutoSOP first. It will ask the right questions before writing the SOP.
+        </p>
+      </div>
 
-    {/* Section Heading */}
-    <div className="text-center space-y-3 mb-8">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-        If you don’t know the variables yet… ask this first
-      </h2>
-
-      <p className="text-muted-foreground max-w-2xl mx-auto">
-        Copy/paste this into AutoSOP first. It will ask you the right questions
-        before writing the SOP.
-      </p>
-    </div>
-
-    {/* Prompt Card */}
-    <div className="rounded-2xl border bg-white p-6 md:p-8">
-      <pre className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+      {/* Ask-first card */}
+      <div className="mt-6 flex justify-center">
+        <Card className="w-full max-w-5xl border-secondary">
+          <CardContent className="p-6">
+            <div className="rounded-xl border border-secondary bg-white p-4 font-mono text-sm text-muted-foreground whitespace-pre-wrap">
 {`Before writing the SOP, ask me 10 clarifying questions to capture:
 - Role(s)
 - Goal + definition of done
@@ -187,32 +185,33 @@ Format:
 - SLAs / timing expectations
 
 After I answer, produce the full SOP in a clean, step-by-step format.`}
-      </pre>
-    </div>
-
-    {/* CTA */}
-    <div className="mt-10 text-center space-y-4">
-      <p className="text-lg font-medium">
-        Ready to generate your SOP?
-      </p>
-
-      <a
-        href="https://app.autosop.ai/users/sign_up"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:bg-[#c3181d] transition"
-      >
-        Create your {templateTitle} SOP
-      </a>
-
-      <div className="text-s text-muted-foreground">
-        Free to start. No credit card required.
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
 
-  </div>
-</section>
+      {/* CTA under the card */}
+      <div className="mt-6 flex flex-col items-center justify-center gap-3 text-center">
+        <div className="text-sm text-muted-foreground">
+          Ready? Create your <span className="font-medium text-foreground">{templateTitle}</span> SOP now.
+        </div>
 
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            asChild
+            className="group bg-primary text-primary-foreground hover:bg-[#c3181d]"
+          >
+            <a href={primaryCtaHref} target="_blank" rel="noopener noreferrer">
+              {primaryCtaLabel}
+            </a>
+          </Button>
+
+          {secondaryCtaHref ? (
+            <Button asChild variant="outline">
+              <a href={secondaryCtaHref}>{secondaryCtaLabel}</a>
+            </Button>
+          ) : null}
+        </div>
       </div>
     </section>
   );
