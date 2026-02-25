@@ -4,10 +4,27 @@ import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import HubspotFormModal from "@/components/HubspotFormModal";
+import DemoModalProvider, { useDemoModal } from "@/components/DemoModalProvider";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
-const HUBSPOT_PORTAL_ID = "50269348";
-const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
+const SOLUTIONS = [
+  { label: "Franchise SOP Software", href: "/solutions/franchise-sop-software" },
+  { label: "Multi-Location Operations", href: "/solutions/multi-location-operations" },
+  { label: "Onboarding SOP Software", href: "/solutions/onboarding-sop-software" },
+  { label: "Compliance SOP Software", href: "/solutions/compliance-sop-software" },
+];
+
+const TEMPLATES = [
+  { label: "Employee Onboarding SOP Prompt", href: "/templates/employee-onboarding-sop-prompt-template" },
+  // add more as you create them
+];
 
 function Section({
   children,
@@ -23,100 +40,140 @@ function Section({
   );
 }
 
-export default function SiteShell({ children }: { children: React.ReactNode }) {
-  const [demoOpen, setDemoOpen] = React.useState(false);
-  const [salesOpen, setSalesOpen] = React.useState(false);
+function Header() {
+  const { openDemo } = useDemoModal();
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur">
-        <Section className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Link href="/" className="flex items-center">
-              <img
-                src="/assets/autoSOP-logo.png"
-                alt="AutoSOP ai"
-                className="h-7 w-auto cursor-pointer"
-              />
-            </Link>
+    <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur">
+      <Section className="flex h-16 items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center">
+            <img
+              src="/assets/autoSOP-logo.png"
+              alt="AutoSOP ai"
+              className="h-7 w-auto cursor-pointer"
+            />
+          </Link>
 
-            <Badge variant="outline" className="ml-3 hidden md:inline-flex">
-              White Label Opportunities
-            </Badge>
-          </div>
+          <Badge variant="outline" className="ml-3 hidden md:inline-flex">
+            White Label Opportunities
+          </Badge>
+        </div>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm">
-            {/* On non-home pages these anchor links won’t help much — optional:
-                You can keep them, or replace with real pages later */}
-            <Link href="/#how" className="hover:underline">How it works</Link>
-            <Link href="/#features" className="hover:underline">Features</Link>
-            <Link href="/#pricing" className="hover:underline">Pricing</Link>
-            <Link href="/security" className="hover:underline">Security</Link>
-            <Link href="/#faq" className="hover:underline">FAQ</Link>
-          </nav>
+        <nav className="hidden md:flex items-center gap-6 text-sm">
+  <Link href="/#how" className="hover:underline">How it works</Link>
 
-          <div className="flex items-center gap-2">
-            <a href="https://app.autosop.ai/users/sign_in" className="hidden md:inline-flex">
-              <Button variant="ghost">Sign in</Button>
-            </a>
-
-            <Button
-              onClick={() => setDemoOpen(true)}
-              className="group bg-primary text-primary-foreground hover:bg-[#c3181d]"
-            >
-              Book a demo
-            </Button>
-          </div>
-        </Section>
-      </header>
-
-      {/* Page */}
-      <main>{children}</main>
-
-      {/* Footer */}
-      <footer className="border-t py-10">
-        <Section className="flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src="/assets/autoSOP-logo.png" alt="AutoSOP.ai" className="h-8 w-auto" />
-            <div>
-              <div className="font-semibold">AutoSOP.ai</div>
-              <div className="text-xs text-muted-foreground">
-                © {new Date().getFullYear()} AutoSOP. All rights reserved.
-              </div>
+  <NavigationMenu>
+    <NavigationMenuList className="gap-2">
+      <NavigationMenuItem>
+        <NavigationMenuTrigger className="h-auto px-0 py-0 text-sm font-normal hover:underline bg-transparent">
+          Solutions
+        </NavigationMenuTrigger>
+        <NavigationMenuContent>
+          <div className="w-[360px] p-3">
+            <div className="grid gap-1">
+              {SOLUTIONS.map((item) => (
+                <NavigationMenuLink asChild key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="rounded-md px-3 py-2 hover:bg-muted transition text-sm"
+                  >
+                    {item.label}
+                  </Link>
+                </NavigationMenuLink>
+              ))}
             </div>
           </div>
+        </NavigationMenuContent>
+      </NavigationMenuItem>
 
-          <div className="flex gap-6 text-sm">
-            <Link href="/security" className="hover:underline">Security</Link>
-            <Link href="/status" className="hover:underline">Status</Link>
-            <Link href="/privacy" className="hover:underline">Privacy</Link>
-            <Link href="/terms" className="hover:underline">Terms</Link>
-            
+      <NavigationMenuItem>
+        <NavigationMenuTrigger className="h-auto px-0 py-0 text-sm font-normal hover:underline bg-transparent">
+          Templates
+        </NavigationMenuTrigger>
+        <NavigationMenuContent>
+          <div className="w-[360px] p-3">
+            <div className="grid gap-1">
+              {TEMPLATES.map((item) => (
+                <NavigationMenuLink asChild key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="rounded-md px-3 py-2 hover:bg-muted transition text-sm"
+                  >
+                    {item.label}
+                  </Link>
+                </NavigationMenuLink>
+              ))}
+            </div>
           </div>
-        </Section>
-      </footer>
+        </NavigationMenuContent>
+      </NavigationMenuItem>
+    </NavigationMenuList>
+  </NavigationMenu>
 
-      {/* HubSpot Modals (mounted once globally) */}
-      <HubspotFormModal
-        open={demoOpen}
-        onOpenChange={setDemoOpen}
-        title="Book a demo"
-        portalId={HUBSPOT_PORTAL_ID}
-        formId={HUBSPOT_FORM_ID}
-        region="na1"
-        ctaSource="book_demo"
-      />
+  <Link href="/#pricing" className="hover:underline">Pricing</Link>
+  <Link href="/security" className="hover:underline">Security</Link>
+  <Link href="/#faq" className="hover:underline">FAQ</Link>
+</nav>
 
-      <HubspotFormModal
-        open={salesOpen}
-        onOpenChange={setSalesOpen}
-        title="Talk to Sales"
-        portalId={HUBSPOT_PORTAL_ID}
-        formId={HUBSPOT_FORM_ID}
-        region="na1"
-        ctaSource="talk_to_sales"
-      />
-    </div>
+        <div className="flex items-center gap-2">
+          <a href="https://app.autosop.ai/users/sign_in" className="hidden md:inline-flex">
+            <Button variant="ghost">Sign in</Button>
+          </a>
+
+          <Button
+            onClick={openDemo}
+            className="group bg-primary text-primary-foreground hover:bg-[#c3181d]"
+          >
+            Book a demo
+          </Button>
+        </div>
+      </Section>
+    </header>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t py-10">
+      <Section className="flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img src="/assets/autoSOP-logo.png" alt="AutoSOP.ai" className="h-8 w-auto" />
+          <div>
+            <div className="font-semibold">AutoSOP.ai</div>
+            <div className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} AutoSOP. All rights reserved.
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-6 text-sm">
+          <Link href="/security" className="hover:underline">
+            Security
+          </Link>
+          <Link href="/status" className="hover:underline">
+            Status
+          </Link>
+          <Link href="/privacy" className="hover:underline">
+            Privacy
+          </Link>
+          <Link href="/terms" className="hover:underline">
+            Terms
+          </Link>
+        </div>
+      </Section>
+    </footer>
+  );
+}
+
+export default function SiteShell({ children }: { children: React.ReactNode }) {
+  return (
+    <DemoModalProvider>
+      <div className="min-h-screen w-full bg-background text-foreground">
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </div>
+    </DemoModalProvider>
   );
 }
