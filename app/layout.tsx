@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+
 import SiteShell from "@/components/SiteShell";
+import DemoModalProvider from "@/components/DemoModalProvider";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.autosop.ai"),
   title: "AutoSOP – Standardize Once. Run Anywhere.",
   description:
     "Capture real workflows and turn them into governed, brand-safe SOPs your team can actually follow. Built for scale and security.",
@@ -25,7 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <SiteShell>{children}</SiteShell>
+        <DemoModalProvider>
+          <SiteShell>{children}</SiteShell>
+        </DemoModalProvider>
       </body>
     </html>
   );
