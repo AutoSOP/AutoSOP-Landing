@@ -318,10 +318,10 @@ const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
                 <BadgeCheck className="h-4 w-4"/> Scalable by Design • Standardize Once • Run Everywhere
               </Pill>
               <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight">
-                Turn tribal knowledge into <span className="underline decoration-dashed underline-offset-4 decoration-secondary">clickable SOPs</span> & create accountability.
+                AutoSOP helps your business <span className="underline decoration-dashed underline-offset-4 decoration-secondary">run </span> itself.
               </h1>
               <p className="text-muted-foreground text-base md:text-lg max-w-prose">
-                AutoSOP captures how work really gets done across all departments in your business and turns it into living, step by step playbooks—complete with PDF, Word and Powerpoint exports.
+              AutoSOP captures how your business actually runs and transforms it into scalable SOPs, training systems, and operational accountability.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
               <Button
@@ -369,7 +369,7 @@ const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
     </svg>
   </div>
 
-  Watch Overview
+  Video Overview
 </Button>
               </div>
               <div className="pt-4">
@@ -633,9 +633,7 @@ const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
   region="na1"
   ctaSource="talk_to_sales"
 />
-<div className="fixed bottom-4 right-4 z-[999999] rounded bg-black px-3 py-2 text-xs text-white">
-  demoOpen: {String(demoOpen)} | salesOpen: {String(salesOpen)}
-</div>
+
 
 <VideoModal
   open={videoOpen}
