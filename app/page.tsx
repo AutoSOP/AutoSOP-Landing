@@ -321,7 +321,7 @@ const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
                 AutoSOP helps your business <span className="underline decoration-dashed underline-offset-4 decoration-secondary">run </span> itself.
               </h1>
               <p className="text-muted-foreground text-base md:text-lg max-w-prose">
-              AutoSOP captures how your business actually runs and transforms it into scalable SOPs, training systems, and operational accountability.
+              So your team stops asking the same questions, making the same mistakes, and depending on you for everything.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
               <Button
