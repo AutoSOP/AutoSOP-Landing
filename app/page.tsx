@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import React from "react";
+import VideoModal from "@/components/VideoModal";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -92,6 +93,7 @@ const LogoCloud = () => (
     ))}
   </div>
 );
+
 
 type PricingTierProps = {
   name: string;
@@ -298,6 +300,7 @@ const AccordionItem = ({ item, index }: { item: FAQItem; index: number }) => {
 export default function Page() {
 const [demoOpen, setDemoOpen] = React.useState(false);
 const [salesOpen, setSalesOpen] = React.useState(false);
+const [videoOpen, setVideoOpen] = React.useState(false);
 
 const HUBSPOT_PORTAL_ID = "50269348";
 const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
@@ -335,7 +338,39 @@ const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 transition" />
   </a>
 </Button>
-                <Button size="lg" variant="outline">Watch 2 min overview</Button>
+ <Button
+  variant="outline"
+  onClick={() => setVideoOpen(true)}
+  className="
+    group
+    h-14
+    rounded-2xl
+    border-border
+    bg-white
+    px-6
+    text-base
+    font-semibold
+    shadow-sm
+    transition-all
+    hover:-translate-y-0.5
+    hover:border-primary/30
+    hover:bg-white
+    hover:shadow-md
+  "
+>
+  <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="h-4 w-4 ml-0.5"
+    >
+      <path d="M8 5.14v14l11-7-11-7z" />
+    </svg>
+  </div>
+
+  Watch Overview
+</Button>
               </div>
               <div className="pt-4">
                 <LogoCloud />
@@ -602,7 +637,11 @@ const HUBSPOT_FORM_ID = "e9bc35cf-a443-41d0-9807-a3069a66f008";
   demoOpen: {String(demoOpen)} | salesOpen: {String(salesOpen)}
 </div>
 
-
+<VideoModal
+  open={videoOpen}
+  onOpenChange={setVideoOpen}
+  youtubeId="VrcqzfA0Kgc"
+/>
       
     </div>
   );
